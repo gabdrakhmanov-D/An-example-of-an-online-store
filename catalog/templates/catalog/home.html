@@ -68,50 +68,32 @@
                 товаров.</p>
         </div>
         <div class="row mt-5">
-            <div class="col-3 ms-5">
-                <div class="card text-center">
-                    <div class="card-header h5 ">
-                        <strong>Товар 1</strong>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title h1">$ 100</h5>
-                        <p class="card-text"><strong>10 users included, 2GB of storage, Email support, Help center
-                            access </strong></p>
-                        <a href="#" class="btn btn-light text-primary border-primary w-100">Купить</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-1"></div>
-            <div class="col-3">
-                <div class="card text-center">
+            {% if latest_added_product %}
+            {% for product in latest_added_product %}
+            <div class="col-3 my-5">
+                <div class="card text-center" style="max-width: 1050px">
                     <div class="card-header h5">
-                        <strong>Товар 1</strong>
+                        <strong>{{ product.name }}</strong>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title h1">$ 100</h5>
-                        <p class="card-text "><strong>10 users included, 2GB of storage, Email support, Help center
-                            access </strong></p>
-                        <a href="#" class="btn btn-light text-primary border-primary w-100">Купить</a>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{product.name}}">
+                    {% else %}
+                    {% load static %}
+                    <img src="{% static 'default_img/product.webp' %}" class="object-fit-sm-contain border rounded" alt="{{product.name}}" height="335">
+                    {% endif %}
+                    <div class="card-body overflow-auto" style="height: 250px">
+                        <p class="card-text  py-2"><strong>{{product.description }} </strong></p>
+                        <h5 class="card-title h1">ЦЕНА: {{ product.purchase_price }} РУБ.</h5>
                     </div>
-                </div>
-            </div>
-            <div class="col-1"></div>
-            <div class="col-3">
-                <div class="card text-center">
-                    <div class="card-header h5">
-                        <strong>Товар 1</strong>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title h1">$ 100</h5>
-                        <p class="card-text"><strong>10 users included, 2GB of storage, Email support, Help center
-                            access </strong></p>
-                        <a href="#" class="btn btn-light text-primary border-primary w-100">Купить</a>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-light text-primary border-primary w-100 mt-4">Купить</a>
                     </div>
                 </div>
             </div>
-            <div class="col-1"></div>
-
-
+            {% endfor %}
+            {% else %}
+            <p>No polls are available.</p>
+            {% endif %}
         </div>
 
     </div>
@@ -133,7 +115,7 @@
                                  class="bi bi-person-fill" viewBox="0 0 16 16">
                                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
                             </svg>
-                              Пользователь
+                            Пользователь
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="#">Профиль</a></li>

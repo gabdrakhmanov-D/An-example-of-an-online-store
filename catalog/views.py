@@ -1,8 +1,19 @@
+from django.http import HttpResponse
 from django.shortcuts import render
+
+from catalog.models import Product
+from django.template import loader
+
 
 # Create your views here.
 def home(request):
-    return render(request, 'catalog/home.html')
+    latest_added_product = Product.objects.order_by('-created_at')[:5]
+    template = loader.get_template("catalog/home.html")
+    context = {"latest_added_product": latest_added_product}
+    for product in latest_added_product:
+        print(f'Название: {product.name}\n'
+              f'Описание: {product.description}\n')
+    return HttpResponse(template.render(context, request))
 
 
 def contacts(request):
