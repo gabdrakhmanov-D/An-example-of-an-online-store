@@ -21,7 +21,7 @@ def contacts(request):
         name = request.POST.get('user_name')
         email = request.POST.get('user_email')
         user_text = request.POST.get('user_text')
-        print(name,user_text)
+        print(name, user_text)
         return render(request, 'catalog/thanks.html')
     store_contact = StoreContact.objects.all()[0]
     template = loader.get_template("catalog/contacts.html")
