@@ -37,14 +37,14 @@ class StoreContact(models.Model):
 
     telephone = models.CharField(max_length=20, verbose_name='Телефон для связи', blank=False, null=False)
     email = models.CharField(max_length=50, verbose_name='Электронная почта', blank=False, null=False)
-    main_office = models.CharField(max_length=200, verbose_name='Адрес офиса', blank=False, null=False)
+    main_office_address = models.CharField(max_length=200, verbose_name='Адрес офиса', blank=False, null=False)
     office_hours = models.CharField(max_length=200, verbose_name='Время работы офиса', blank=False, null=False)
     tg_contact = models.CharField(max_length=50, verbose_name='Телеграмм', blank=True, null=True)
     whatsapp = models.CharField(max_length=50, verbose_name='Ватсапп', blank=True, null=True)
     instagram = models.CharField(max_length=50, verbose_name='Инстаграмм', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.main_office}\n {self.telephone}'
+        return f'{self.main_office_address}\n {self.telephone}'
 
     class Meta:
         verbose_name = 'Контакт'
