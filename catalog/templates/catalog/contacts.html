@@ -93,41 +93,41 @@
                 <div class="col-5 bg">
                     <h2 class="text-left">
                         Наши контакты</h2>
+                    {% if store_contact %}
                     <dl class="row mt-5">
                         <dt class="col-sm-3">Основной способ связи.</dt>
-                        <dd class="col-sm-9">Телефон: 8 (800) XXX-XX-XX (бесплатно по России) Операторы работают
+                        <dd class="col-sm-9">Телефон: {{store_contact.telephone}} (бесплатно по России) Операторы работают
                             ежедневно с 9:00 до
                             21:00
                         </dd>
                         <dt class="col-sm-3">Email:</dt>
-                        <dd class="col-sm-9">info@yourcompany.ru Ответим на все вопросы в течение рабочего дня</dd>
+                        <dd class="col-sm-9">{{store_contact.email}} Ответим на все вопросы в течение рабочего дня</dd>
                         <dt class="col-sm-3">Офисы и представительства:</dt>
                         <dd class="col-sm-9">
                             <dl class="row">
                                 <dt class="col-sm-4">Главный офис:</dt>
-                                <dd class="col-sm-8">123456, г. Москва, ул. Примерная, д. 123, офис 100
-                                </dd>
+                                <dd class="col-sm-8">{{store_contact.main_office_address}}</dd>
                             </dl>
                             <dl class="row">
                                 <dt class="col-sm-4">Время работы офиса:</dt>
-                                <dd class="col-sm-8">Понедельник — Пятница: 9:00–18:00
-                                    Суббота и Воскресенье: выходной
-                                </dd>
+                                <dd class="col-sm-8">{{store_contact.office_hours}}</dd>
                             </dl>
                         </dd>
                         <dt class="col-sm-3">Социальные сети и мессенджеры:</dt>
                         <dd class="col-sm-9">
                             <dl class="row">
                                 <dt class="col-sm-2">Telegram:</dt>
-                                <dd class="col-sm-10">@yourcompany_bot</dd>
+                                <dd class="col-sm-10">{{store_contact.tg_contact}}</dd>
                                 <dt class="col-sm-2">WhatsApp:</dt>
-                                <dd class="col-sm-10">@7 (XXX) XXX-XX-XX</dd>
+                                <dd class="col-sm-10">{{store_contact.whatsapp}}</dd>
                                 <dt class="col-sm-2">Instagram:</dt>
-                                <dd class="col-sm-10">instagram.com/yourcompany</dd>
+                                <dd class="col-sm-10">{{store_contact.instagram}}</dd>
                             </dl>
                         </dd>
                     </dl>
-
+                    {% else %}
+                    <p>No contacts are available.</p>
+                    {% endif %}
 
                 </div>
                 <div class="col-1"></div>

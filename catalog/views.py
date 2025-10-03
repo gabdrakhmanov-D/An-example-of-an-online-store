@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from catalog.models import Product
+from catalog.models import Product, StoreContact
 from django.template import loader
 
 
@@ -23,4 +23,7 @@ def contacts(request):
         user_text = request.POST.get('user_text')
         print(name,user_text)
         return render(request, 'catalog/thanks.html')
-    return render(request, 'catalog/contacts.html')
+    store_contact = StoreContact.objects.all()[0]
+    template = loader.get_template("catalog/contacts.html")
+    context = {"store_contact": store_contact}
+    return HttpResponse(template.render(context, request))
