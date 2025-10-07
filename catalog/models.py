@@ -29,7 +29,7 @@ class Product(models.Model):
         null=True,
         related_name="products",
     )
-    purchase_price = models.FloatField(verbose_name="Цена за покупку")
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за покупку")
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
