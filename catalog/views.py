@@ -30,7 +30,10 @@ def contacts(request):
 
 
 def product_info(request, product_id):
-    product = Product.objects.get(product_id)
+    try:
+        product = Product.objects.get(pk = product_id)
+    except Product.DoesNotExist:
+        product = None
     template = "catalog/product_info.html"
-    context = {"product_info": product}
+    context = {"product": product}
     return render(request, template_name=template, context=context)
