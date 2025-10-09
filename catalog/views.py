@@ -27,3 +27,10 @@ def contacts(request):
     template = loader.get_template("catalog/contacts.html")
     context = {"store_contact": store_contact}
     return HttpResponse(template.render(context, request))
+
+
+def product_info(request, product_id):
+    product = Product.objects.get(product_id)
+    template = "catalog/product_info.html"
+    context = {"product_info": product}
+    return render(request, template_name=template, context=context)
