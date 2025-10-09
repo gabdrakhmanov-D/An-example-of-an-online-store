@@ -37,3 +37,15 @@ def product_info(request, product_id):
     template = "catalog/product_info.html"
     context = {"product": product}
     return render(request, template_name=template, context=context)
+
+
+def add_product(request):
+    if request.method == 'POST':
+        name = request.POST.get('product_name')
+        description = request.POST.get('product_description')
+        image = request.POST.get('product_image')
+        category = request.POST.get('product_category')
+        purchase_price = request.POST.get('product_purchase_price')
+        return render(request, 'catalog/thanks.html')
+    template = loader.get_template("catalog/contacts.html")
+    return render(request, template_name=template)
