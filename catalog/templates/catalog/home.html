@@ -23,8 +23,8 @@
             <img src="{% static 'default_img/product.webp' %}" class="object-fit-sm-contain border rounded"
                  alt="{{product.name}}" height="335">
             {% endif %}
-            <div class="card-body overflow-auto" style="height: 250px">
-                <p class="card-text  py-2"><strong>{{product.description }} </strong></p>
+            <div class="card-body" style="height: 250px">
+                <p class="card-text  py-2"><strong>{{ product.description|truncatechars:100 }} </strong></p>
                 <h5 class="card-title h1">ЦЕНА: {{ product.purchase_price }} РУБ.</h5>
             </div>
             <div class="card-footer">
