@@ -4,10 +4,11 @@
 
 {% block content %}
 <header>
-    <h1>Подробная информация о товаре:</h1>
+    <h1 class="text-center">Подробная информация о товаре:</h1>
 </header>
 {% if product %}
-<div class="card text-center" style="max-width: 1050px">
+<div class="d-flex justify-content-center align-items-stretch mt-5">
+<div class="card text-center align-middle" style="max-width: 1050px">
     <div class="card-header h5">
         <strong>{{ product.name }}</strong>
     </div>
@@ -30,6 +31,6 @@
 <div class="container text-center">
     <h2>Товар не найден</h2>
 </div>
-
+</div>
 {% endif %}
 {% endblock %}
