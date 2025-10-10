@@ -10,34 +10,37 @@
 </header>
 <div class="row mt-5 justify-content-center">
     {% for product_page in page_obj %}
+
     <div class="col-3 my-5">
-        <div class="card text-center bg-info-subtle" style="height: 850px">
-            <div class="card-header h5" style="height: 80px">
-                <strong>{{ product_page.name }}</strong>
+        <a class="link-dark link-offset-2 link-underline link-underline-opacity-0" href="{% url 'product_info' product_page.pk %}">
+            <div class="card text-center bg-info-subtle" style="height: 850px">
+                <div class="card-header h5" style="height: 80px">
+                    <strong>{{ product_page.name }}</strong>
+                </div>
+                <div class="container text-center bg-info-subtle" style="height: 400px">
+                    {% if product_page.image %}
+                    <img src="{{ product_page.image.url }}"
+                         class="card-img-top img-fluid position-relative top-50 start-50 translate-middle"
+                         alt="{{product_page.name}}">
+                    {% else %}
+                    {% load static %}
+                    <img src="{% static 'default_img/product.webp' %}"
+                         class="object-fit-sm-contain border rounded img-fluid position-relative top-50 start-50 translate-middle"
+                         alt="{{product_page.name}}" height="335">
+                    {% endif %}
+                </div>
+                <div class="card-body" style="height: 250px">
+                    <p class="card-text  py-2"><strong>{{ product_page.description|truncatechars:100 }} </strong></p>
+                    <h5 class="card-title h1">ЦЕНА: {{ product_page.purchase_price }} РУБ.</h5>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="btn btn-light text-primary border-primary w-100 mt-4">Купить</a>
+                </div>
             </div>
-            <div class="container text-center bg-info-subtle" style="height: 400px">
-                {% if product_page.image %}
-                <img src="{{ product_page.image.url }}"
-                     class="card-img-top img-fluid position-relative top-50 start-50 translate-middle"
-                     alt="{{product_page.name}}">
-                {% else %}
-                {% load static %}
-                <img src="{% static 'default_img/product.webp' %}"
-                     class="object-fit-sm-contain border rounded img-fluid position-relative top-50 start-50 translate-middle"
-                     alt="{{product_page.name}}" height="335">
-                {% endif %}
-            </div>
-            <div class="card-body" style="height: 250px">
-                <p class="card-text  py-2"><strong>{{ product_page.description|truncatechars:100 }} </strong></p>
-                <h5 class="card-title h1">ЦЕНА: {{ product_page.purchase_price }} РУБ.</h5>
-            </div>
-            <div class="card-footer">
-                <a href="#" class="btn btn-light text-primary border-primary w-100 mt-4">Купить</a>
-            </div>
-        </div>
-    </div>
+        </a></div>
+
     {% endfor %}
-    <nav aria-label="Пример навигации по страницам">
+    <nav aria-label="Навигация по страницам">
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
