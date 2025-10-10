@@ -1,0 +1,25 @@
+<!--Форма обратной связи пользователя-->
+
+<div class="col-4 border rounded-2 bg-info-subtle">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="mb-3 mt-3">
+            <label for="user_name" class="form-label">Имя</label>
+            <input type="text" class="form-control" id="user_name" name="user_name">
+        </div>
+        <div class="mb-3">
+            <label for="basic-addon1" class="form-label">Почта</label>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">@</span>
+                <input type="email" class="form-control" aria-describedby="basic-addon1"
+                       name="user_email">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="FormControlTextarea" class="form-label">Сообщение</label>
+            <textarea class="form-control" id="FormControlTextarea" rows="3"
+                      name="user_text"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Отправить</button>
+    </form>
+</div>
