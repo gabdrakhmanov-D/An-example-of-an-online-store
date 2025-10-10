@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -7,13 +8,17 @@ from django.template import loader
 
 # Create your views here.
 def home(request):
-    latest_added_product = Product.objects.order_by('-created_at')[:5]
-    template = loader.get_template("catalog/home.html")
-    context = {"latest_added_product": latest_added_product}
-    for product in latest_added_product:
-        print(f'Название: {product.name}\n'
-              f'Описание: {product.description}\n')
-    return HttpResponse(template.render(context, request))
+    products = Product.objects.all()
+
+    paginator = Paginator(products, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    template = 'catalog/home.html'
+    context = {'products': products,
+               'page_obj': page_obj,}
+
+    return render(request, context=context, template_name=template)
 
 
 def contacts(request):
