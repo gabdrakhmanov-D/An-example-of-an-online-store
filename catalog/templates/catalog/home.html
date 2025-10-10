@@ -8,9 +8,8 @@
     <p class="h5 text-center text-secondary">Вы находитесь на сайте, предназначенном для продажи
         товаров.</p>
 </header>
-<div class="row mt-5 justify-content-center">
+<div class="row mt-2 justify-content-center">
     {% for product_page in page_obj %}
-
     <div class="col-3 my-5">
         <a class="link-dark link-offset-2 link-underline link-underline-opacity-0" href="{% url 'product_info' product_page.pk %}">
             <div class="card text-center bg-info-subtle" style="height: 850px">
@@ -38,7 +37,6 @@
                 </div>
             </div>
         </a></div>
-
     {% endfor %}
     <nav aria-label="Навигация по страницам">
         <ul class="pagination justify-content-center">
