@@ -12,7 +12,7 @@
     {% for product_page in page_obj %}
     <div class="col-3 my-5">
         <a class="link-dark link-offset-2 link-underline link-underline-opacity-0" href="{% url 'product_info' product_page.pk %}">
-            <div class="card text-center bg-info-subtle" style="height: 850px">
+            <div class="card text-center bg-info-subtle" style="height: 600px">
                 <div class="card-header h5" style="height: 80px">
                     <strong>{{ product_page.name }}</strong>
                 </div>
@@ -30,11 +30,8 @@
                 </div>
                 <div class="card-body" style="height: 250px">
                     <p class="card-text  py-2"><strong>{{ product_page.description|truncatechars:100 }} </strong></p>
-                    <h5 class="card-title h1">ЦЕНА: {{ product_page.purchase_price }} РУБ.</h5>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-light text-primary border-primary w-100 mt-4">Купить</a>
-                </div>
+
             </div>
         </a></div>
     {% endfor %}
