@@ -43,10 +43,7 @@ def add_product(request):
     if request.method == 'POST':
         name = request.POST.get('product_name')
         description = request.POST.get('product_description')
-        image_1 = Product(request.POST, request.FILES)
-        # if image_1.is_valid():
-        image = request.FILES('product_image')
-        # image = request.POST.get('product_image')
+        image = request.FILES['product_image']
         category_id = int(request.POST.get('product_category'))
         category=Category.objects.get(pk=category_id)
         purchase_price = request.POST.get('product_purchase_price')
