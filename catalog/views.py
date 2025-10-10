@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from catalog.models import Product, StoreContact
+from catalog.models import Product, StoreContact, Category
 from django.template import loader
 
 
@@ -43,9 +43,20 @@ def add_product(request):
     if request.method == 'POST':
         name = request.POST.get('product_name')
         description = request.POST.get('product_description')
-        image = request.POST.get('product_image')
-        category = request.POST.get('product_category')
+        image_1 = Product(request.POST, request.FILES)
+        # if image_1.is_valid():
+        image = request.FILES('product_image')
+        # image = request.POST.get('product_image')
+        category_id = int(request.POST.get('product_category'))
+        category=Category.objects.get(pk=category_id)
         purchase_price = request.POST.get('product_purchase_price')
+        Product.objects.create(name=name,
+                               description=description,
+                               image=image,
+                               category=category,
+                               purchase_price=purchase_price)
         return render(request, 'catalog/thanks.html')
-    template = loader.get_template("catalog/contacts.html")
-    return render(request, template_name=template)
+    categories = Category.objects.all()
+    context = {'categories': categories}
+    template = "catalog/add_product.html"
+    return render(request, template_name=template, context=context)
