@@ -12,17 +12,19 @@
     {% if latest_added_product %}
     {% for product in latest_added_product %}
     <div class="col-3 my-5">
-        <div class="card text-center" style="max-width: 1050px">
-            <div class="card-header h5">
+        <div class="card text-center bg-info-subtle" style="height: 850px">
+            <div class="card-header h5" style="height: 80px">
                 <strong>{{ product.name }}</strong>
             </div>
+            <div class="container text-center bg-info-subtle" style="height: 400px">
             {% if product.image %}
-            <img src="{{ product.image.url }}" class="card-img-top" alt="{{product.name}}">
+            <img src="{{ product.image.url }}" class="card-img-top img-fluid position-relative top-50 start-50 translate-middle" alt="{{product.name}}">
             {% else %}
             {% load static %}
-            <img src="{% static 'default_img/product.webp' %}" class="object-fit-sm-contain border rounded"
+            <img src="{% static 'default_img/product.webp' %}" class="object-fit-sm-contain border rounded img-fluid position-relative top-50 start-50 translate-middle"
                  alt="{{product.name}}" height="335">
             {% endif %}
+                </div>
             <div class="card-body" style="height: 250px">
                 <p class="card-text  py-2"><strong>{{ product.description|truncatechars:100 }} </strong></p>
                 <h5 class="card-title h1">ЦЕНА: {{ product.purchase_price }} РУБ.</h5>
