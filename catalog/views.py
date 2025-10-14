@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 
-
+from catalog.forms import ContactForm
 from catalog.models import Product, StoreContact, Category
 from django.template import loader
 
@@ -20,9 +20,16 @@ class HomeListView(ListView):
 
 
 class ContactFormView(FormView):
+    model = StoreContact
     template_name = "catalog/contacts.html"
-    # form_class =
-    success_url = reverse_lazy("catalog/thanks.html")
+    form_class = ContactForm
+    success_url = reverse_lazy("catalog:home")
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+    # form.render()
+    # data = form.cleaned_data
 
 # def contacts(request):
 #     if request.method == 'POST':

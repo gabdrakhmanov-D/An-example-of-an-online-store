@@ -4,21 +4,21 @@
     <form action="" method="POST">
         {% csrf_token %}
         <div class="mb-3 mt-3">
-            <label for="user_name" class="form-label">Имя</label>
-            <input type="text" class="form-control" id="user_name" name="user_name">
+            <label for="{{ form.user_name.id_for_label }}" class="form-label">{{ form.user_name.label }}</label>
+            <input type="text" class="form-control" id="{{ form.user_name.id_for_label }}" name="{{ form.user_name.name }}" >
         </div>
         <div class="mb-3">
-            <label for="basic-addon1" class="form-label">Почта</label>
+            <label for="basic-addon1" class="form-label">{{ form.user_email.label }}</label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">@</span>
                 <input type="email" class="form-control" aria-describedby="basic-addon1"
-                       name="user_email">
+                       name="{{ form.user_email.name }}">
             </div>
         </div>
         <div class="mb-3">
-            <label for="FormControlTextarea" class="form-label">Сообщение</label>
-            <textarea class="form-control" id="FormControlTextarea" rows="3"
-                      name="user_text"></textarea>
+            <label for="{{ form.user_text.id_for_label }}" class="form-label">{{ form.user_text.label }}</label>
+            <textarea class="form-control" id="{{ form.user_text.id_for_label }}" rows="3"
+                      name="{{ form.user_text.name }}"></textarea>
         </div>
         <button type="submit" class="btn btn-primary mb-2">Отправить</button>
     </form>
