@@ -20,28 +20,20 @@ class HomeListView(ListView):
 
 
 class ContactFormView(FormView):
-    model = StoreContact
     template_name = "catalog/contacts.html"
     form_class = ContactForm
     success_url = reverse_lazy("catalog:home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["store_contact"] = StoreContact.objects.all()[0]
+        return context
+
     def form_valid(self, form):
-        print(form.cleaned_data)
+        print(f'Имя пользователя: {form.cleaned_data["user_name"]}\n'
+              f'Адрес электронной почты: {form.cleaned_data["user_email"]}\n'
+              f'Сообщение: {form.cleaned_data["user_text"]}')
         return super().form_valid(form)
-
-    # form.render()
-    # data = form.cleaned_data
-
-# def contacts(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('user_name')
-#         email = request.POST.get('user_email')
-#         user_text = request.POST.get('user_text')
-#         print(name, user_text)
-#         return render(request, 'catalog/thanks.html')
-#     store_contact = StoreContact.objects.all()[0]
-#     template = loader.get_template("catalog/contacts.html")
-#     context = {"store_contact": store_contact}
-#     return HttpResponse(template.render(context, request))
 
 
 def product_info(request, product_id):
