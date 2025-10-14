@@ -1,37 +1,40 @@
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
+
 
 from catalog.models import Product, StoreContact, Category
 from django.template import loader
 
 
 # Create your views here.
-def home(request):
-    products = Product.objects.all()
 
-    paginator = Paginator(products, 3)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    template = 'catalog/home.html'
-    context = {'products': products,
-               'page_obj': page_obj,}
-
-    return render(request, context=context, template_name=template)
+class HomeListView(ListView):
+    model = Product
+    paginate_by = 3
+    template_name = "catalog/home.html"
+    context_object_name = 'products'
 
 
-def contacts(request):
-    if request.method == 'POST':
-        name = request.POST.get('user_name')
-        email = request.POST.get('user_email')
-        user_text = request.POST.get('user_text')
-        print(name, user_text)
-        return render(request, 'catalog/thanks.html')
-    store_contact = StoreContact.objects.all()[0]
-    template = loader.get_template("catalog/contacts.html")
-    context = {"store_contact": store_contact}
-    return HttpResponse(template.render(context, request))
+class ContactFormView(FormView):
+    template_name = "catalog/contacts.html"
+    # form_class =
+    success_url = reverse_lazy("catalog/thanks.html")
+
+# def contacts(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('user_name')
+#         email = request.POST.get('user_email')
+#         user_text = request.POST.get('user_text')
+#         print(name, user_text)
+#         return render(request, 'catalog/thanks.html')
+#     store_contact = StoreContact.objects.all()[0]
+#     template = loader.get_template("catalog/contacts.html")
+#     context = {"store_contact": store_contact}
+#     return HttpResponse(template.render(context, request))
 
 
 def product_info(request, product_id):

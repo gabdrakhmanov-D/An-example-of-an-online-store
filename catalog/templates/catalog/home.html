@@ -9,7 +9,7 @@
         товаров.</p>
 </header>
 <div class="row mt-2 justify-content-center">
-    {% for product_page in page_obj %}
+    {% for product_page in products %}
     <div class="col-3 my-5">
         <a class="link-dark link-offset-2 link-underline link-underline-opacity-0" href="{% url 'product_info' product_page.pk %}">
             <div class="card text-center bg-info-subtle" style="height: 600px">
@@ -46,8 +46,8 @@
                 <a class="page-link">Предыдущая</a>
             </li>
             {% endif %}
-            {% for p in page_obj.paginator.page_range %}
-            <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+            {% for page_product in page_obj.paginator.page_range %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_product }}">{{ page_product }}</a></li>
             {% endfor %}
             {% if page_obj.has_next %}
             <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
