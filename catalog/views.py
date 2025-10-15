@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 
@@ -36,14 +37,10 @@ class ContactFormView(FormView):
         return super().form_valid(form)
 
 
-def product_info(request, product_id):
-    try:
-        product = Product.objects.get(pk = product_id)
-    except Product.DoesNotExist:
-        product = None
-    template = "catalog/product_info.html"
-    context = {"product": product}
-    return render(request, template_name=template, context=context)
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "catalog/product_detail.html"
+    context_object_name = 'product'
 
 
 def add_product(request):
