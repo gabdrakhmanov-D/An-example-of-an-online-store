@@ -11,7 +11,7 @@ class Blog(models.Model):
                                blank=False,
                                null=False)
 
-    preview =models.ImageField(upload_to="images/",
+    preview = models.ImageField(upload_to="images/",
                                verbose_name="Превью",
                                blank=True,
                                null=True)
@@ -20,7 +20,9 @@ class Blog(models.Model):
 
     is_published = models.BooleanField(verbose_name="Статус публикации")
 
-    view_count = models.IntegerField(verbose_name="Количество просмотров")
+    view_count = models.PositiveIntegerField(verbose_name="Количество просмотров",
+                                     blank=False,
+                                     null=False)
 
     def __str__(self):
         return f"{self.title}\n {self.content}"
