@@ -3,55 +3,51 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
-<main class="container mt-5">
-  <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
-    <div class="col-lg-6 px-0">
-      <h1 class="display-4 fst-italic">Последний добавленный пост</h1>
-      <p class="lead my-3">Текст поста</p>
-      <p class="lead mb-0"><a href="#" class="text-body-emphasis fw-bold">Продолжить чтение...</a></p>
+<main class="container mt-5 justify-content-center">
+    <div class="row mb-2 ">
     </div>
-  </div>
-  <div class="row mb-2">
-  </div>
-  <div class="row g-5">
-    <div class="col-md-8">
-      <h3 class="pb-4 mb-4 fst-italic border-bottom">
-        Статьи
-      </h3>
-      {% for blog in blogs %}
-      <article class="blog-post">
-        <a class="display-6 link-body-emphasis mb-1" href="{% url 'blog:blog_detail' blog.pk %}">{{ blog.title }}</a>
-        <p class="blog-post-meta">Дата публикации: {{ blog.created_at|date:"d M Y" }} </p>
-        <p class="blog-post-meta">{{ blog.content }} </p>
-        <p class="blog-post-footer">Просмотров: {{ blog.view_count }} </p>
-      </article>
-      {% endfor %}
-          <nav aria-label="Навигация по страницам">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <a class="page-link">Предыдущая</a>
-            </li>
-            {% endif %}
-            {% for page_product in page_obj.paginator.page_range %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_product }}">{{ page_product }}</a></li>
+    <div class="row g-5 ">
+        <div class="col-md-8">
+            <h3 class="pb-4 mb-4 fst-italic border-bottom text-center">
+                Статьи
+            </h3>
+            {% for blog in blogs %}
+            <article class="blog-post bg-info-subtle text-center">
+                <p><a class="fs-3 fst-italic text-black link-offset-2 link-underline link-underline-opacity-0"
+                      href="{% url 'blog:blog_detail' blog.pk %}">{{ blog.title }}</a></p>
+                <p class="blog-post-meta text-end">Дата публикации: {{ blog.created_at|date:"d M Y" }} </p>
+                <p class="blog-post-meta">{{ blog.content }} </p>
+                <p class="blog-post-footer text-end">Просмотров: {{ blog.view_count }} </p>
+            </article>
             {% endfor %}
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <a class="page-link">Следующая</a>
-            </li>
-            {% endif %}
+            <nav aria-label="Навигация по страницам">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">Предыдущая</a>
+                    </li>
+                    {% endif %}
+                    {% for page_product in page_obj.paginator.page_range %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_product }}">{{ page_product }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link"
+                                             href="?page={{ page_obj.next_page_number }}">Следующая</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link">Следующая</a>
+                    </li>
+                    {% endif %}
 
-        </ul>
-    </nav>
+                </ul>
+            </nav>
+        </div>
     </div>
-  </div>
 </main>
 {% endblock %}
