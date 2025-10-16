@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from blog.models import Blog
 
@@ -19,9 +18,9 @@ class BlogCreateView(CreateView):
 
 class BlogListView(ListView):
     model = Blog
-    # paginate_by = 3
+    paginate_by = 5
     template_name = "blog/home.html"
-    context_object_name = 'blog'
+    context_object_name = 'blogs'
 
 
 class BlogUpdateView(UpdateView):
@@ -37,5 +36,11 @@ class BlogUpdateView(UpdateView):
 
 class BlogDeleteView(DeleteView):
     model = Blog
-    template_name = 'blog_confirm_delete.html'
+    template_name = 'blog/blog_confirm_delete.html'
     success_url = reverse_lazy('blog:home')
+
+
+class BlogDetailView(DetailView):
+    model = Blog
+    template_name = 'blog/blog_detail.html'
+    context_object_name = 'blog'

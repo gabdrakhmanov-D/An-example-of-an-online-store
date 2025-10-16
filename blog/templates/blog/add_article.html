@@ -1,14 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-</form>
-</body>
-</html>
+{% extends 'blog\base.html' %}
+
+{% block title %} Написать статью {% endblock %}
+
+{% block content %}
+
+<main class="container mt-5">
+<div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+    <div class="col-lg-6 px-0">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a href="{% url 'blog:home' %}" class="btn btn-primary">Отмена</a>
+
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
