@@ -21,8 +21,9 @@
       {% for blog in blogs %}
       <article class="blog-post">
         <a class="display-6 link-body-emphasis mb-1" href="{% url 'blog:blog_detail' blog.pk %}">{{ blog.title }}</a>
-        <p class="blog-post-meta">{{ blog.created_at|date:"d M Y" }} </p>
+        <p class="blog-post-meta">Дата публикации: {{ blog.created_at|date:"d M Y" }} </p>
         <p class="blog-post-meta">{{ blog.content }} </p>
+        <p class="blog-post-footer">Просмотров: {{ blog.view_count }} </p>
       </article>
       {% endfor %}
           <nav aria-label="Навигация по страницам">

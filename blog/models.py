@@ -21,8 +21,7 @@ class Blog(models.Model):
     is_published = models.BooleanField(verbose_name="Статус публикации")
 
     view_count = models.PositiveIntegerField(verbose_name="Количество просмотров",
-                                     blank=False,
-                                     null=False)
+                                     default=0)
 
     def __str__(self):
         return f"{self.title}\n {self.content}"
