@@ -22,6 +22,10 @@ class BlogListView(ListView):
     template_name = "blog/home.html"
     context_object_name = 'blogs'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(is_published=True)
+
 
 class BlogUpdateView(UpdateView):
 
