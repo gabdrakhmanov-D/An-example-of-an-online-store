@@ -1,64 +1,53 @@
-from django.core.paginator import Paginator
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import DetailView
+from django.views.generic.list import ListView
+from django.views.generic.edit import FormView, CreateView
 
+from catalog.forms import ContactForm
 from catalog.models import Product, StoreContact, Category
-from django.template import loader
 
 
-# Create your views here.
-def home(request):
-    products = Product.objects.all()
-
-    paginator = Paginator(products, 3)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    template = 'catalog/home.html'
-    context = {'products': products,
-               'page_obj': page_obj,}
-
-    return render(request, context=context, template_name=template)
+class HomeListView(ListView):
+    model = Product
+    paginate_by = 3
+    template_name = "catalog/home.html"
+    context_object_name = 'products'
 
 
-def contacts(request):
-    if request.method == 'POST':
-        name = request.POST.get('user_name')
-        email = request.POST.get('user_email')
-        user_text = request.POST.get('user_text')
-        print(name, user_text)
-        return render(request, 'catalog/thanks.html')
-    store_contact = StoreContact.objects.all()[0]
-    template = loader.get_template("catalog/contacts.html")
-    context = {"store_contact": store_contact}
-    return HttpResponse(template.render(context, request))
+class ContactFormView(FormView):
+    template_name = "catalog/contacts.html"
+    form_class = ContactForm
+    success_url = reverse_lazy("catalog:home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["store_contact"] = StoreContact.objects.all()[0]
+        return context
+
+    def form_valid(self, form):
+        print(f'Имя пользователя: {form.cleaned_data["user_name"]}\n'
+              f'Адрес электронной почты: {form.cleaned_data["user_email"]}\n'
+              f'Сообщение: {form.cleaned_data["user_text"]}')
+        return super().form_valid(form)
 
 
-def product_info(request, product_id):
-    try:
-        product = Product.objects.get(pk = product_id)
-    except Product.DoesNotExist:
-        product = None
-    template = "catalog/product_info.html"
-    context = {"product": product}
-    return render(request, template_name=template, context=context)
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "catalog/product_detail.html"
+    context_object_name = 'product'
 
 
-def add_product(request):
-    if request.method == 'POST':
-        name = request.POST.get('product_name')
-        description = request.POST.get('product_description')
-        image = request.FILES['product_image']
-        category_id = int(request.POST.get('product_category'))
-        category=Category.objects.get(pk=category_id)
-        purchase_price = request.POST.get('product_purchase_price')
-        Product.objects.create(name=name,
-                               description=description,
-                               image=image,
-                               category=category,
-                               purchase_price=purchase_price)
-        return render(request, 'catalog/thanks.html')
-    categories = Category.objects.all()
-    context = {'categories': categories}
-    template = "catalog/add_product.html"
-    return render(request, template_name=template, context=context)
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ['name',
+              'description',
+              'image',
+              'category',
+              'purchase_price']
+    template_name = "catalog/add_product.html"
+    success_url = reverse_lazy("catalog:home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        return context
