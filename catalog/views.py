@@ -44,7 +44,7 @@ class ProductCreateView(CreateView):
               'image',
               'category',
               'purchase_price']
-    template_name = "catalog/add_product.html"
+    template_name = "catalog/product_form.html"
     success_url = reverse_lazy("catalog:home")
 
     def get_context_data(self, **kwargs):
