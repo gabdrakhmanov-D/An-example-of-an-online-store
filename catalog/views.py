@@ -3,11 +3,11 @@ from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView, CreateView
 
-from catalog.forms import ContactForm
+from catalog.forms import ContactForm, ProductForm
 from catalog.models import Product, StoreContact, Category
 
 
-class HomeListView(ListView):
+class ProductListView(ListView):
     model = Product
     paginate_by = 3
     template_name = "catalog/home.html"
@@ -39,11 +39,7 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ['name',
-              'description',
-              'image',
-              'category',
-              'purchase_price']
+    form_class = ProductForm
     template_name = "catalog/product_form.html"
     success_url = reverse_lazy("catalog:home")
 
