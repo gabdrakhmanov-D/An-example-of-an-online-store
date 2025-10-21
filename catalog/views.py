@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
-from django.views.generic import DetailView
+from django.views.generic import DetailView, UpdateView
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import FormView, CreateView, DeleteView
 
 from catalog.forms import ContactForm, ProductForm
 from catalog.models import Product, StoreContact, Category
@@ -13,6 +13,39 @@ class ProductListView(ListView):
     template_name = "catalog/home.html"
     context_object_name = 'products'
 
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "catalog/product_detail.html"
+    context_object_name = 'product'
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:home")
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def form_valid(self, form):
+        page = self.get_context_data()['object'].pk
+        self.success_url = reverse_lazy("catalog:product_detail", kwargs={'pk': page})
+        return super().form_valid(form)
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = "catalog/product_confirm_delete.html"
+
+    def form_valid(self, form):
+        page = self.get_context_data()['object'].pk
+        self.success_url = reverse_lazy("catalog:product_detail", kwargs={'pk': page})
+        return super().form_valid(form)
 
 class ContactFormView(FormView):
     template_name = "catalog/contacts.html"
@@ -30,20 +63,3 @@ class ContactFormView(FormView):
               f'Сообщение: {form.cleaned_data["user_text"]}')
         return super().form_valid(form)
 
-
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = "catalog/product_detail.html"
-    context_object_name = 'product'
-
-
-class ProductCreateView(CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = "catalog/product_form.html"
-    success_url = reverse_lazy("catalog:home")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
-        return context

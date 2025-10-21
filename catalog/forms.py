@@ -31,9 +31,3 @@ class ProductForm(forms.ModelForm):
                 })
             elif field == 'purchase_price':
                 field_object.widget.attrs.update({'step': '500'})
-
-        # self.fields['name'].widget.attrs.update({
-        #     'class': 'form-control',
-        #     'placeholder': f'Введите наименование товара'
-        # })
-
