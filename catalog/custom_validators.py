@@ -5,9 +5,9 @@ from django.core.validators import RegexValidator
 
 
 class Validator(RegexValidator):
-    forbidden_words: list[str] # список запрещенных слов
+    FORBIDDEN_WORDS: list[str] # список запрещенных слов
 
-    forbidden_words = ['казино',
+    FORBIDDEN_WORDS = ['казино',
                        'биржа',
                        'обман',
                        'криптовалюта',
@@ -20,7 +20,7 @@ class Validator(RegexValidator):
     inverse_match = True
 
     def __call__(self, value):
-        for word in self.forbidden_words:
+        for word in self.FORBIDDEN_WORDS:
             self.regex = re.compile(rf'({word})', re.IGNORECASE)
             regex_matches = self.regex.search(str(value))
             invalid_input = regex_matches if self.inverse_match else not regex_matches
