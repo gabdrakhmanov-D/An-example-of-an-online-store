@@ -41,11 +41,7 @@ class ProductUpdateView(UpdateView):
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = "catalog/product_confirm_delete.html"
-
-    def form_valid(self, form):
-        page = self.get_context_data()['object'].pk
-        self.success_url = reverse_lazy("catalog:product_detail", kwargs={'pk': page})
-        return super().form_valid(form)
+    success_url = reverse_lazy("catalog:home")
 
 class ContactFormView(FormView):
     template_name = "catalog/contacts.html"
