@@ -11,7 +11,7 @@ class ContactForm(forms.Form):
 
 
 class ProductForm(forms.ModelForm):
-    MAX_UPLOAD_SIZE = 5242880 #5MB
+    MAX_UPLOAD_SIZE = 5 * 1024 ** 2
     ALLOWED_TYPES = ['image/jpeg', 'image/png']
 
     class Meta:
