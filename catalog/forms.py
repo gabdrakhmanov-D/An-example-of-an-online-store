@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from catalog.custom_validators import Validator
+from catalog.custom_validators import ForbiddenWordsValidator
 from catalog.models import Product
 
 class ContactForm(forms.Form):
@@ -24,7 +24,7 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.validation = Validator()
+        self.validation = ForbiddenWordsValidator()
 
         for field, field_object in self.fields.items():
             field_object.widget.attrs.update({'class': 'form-control'})
