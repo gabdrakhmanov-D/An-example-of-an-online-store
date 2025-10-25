@@ -20,13 +20,17 @@
                     <div class="col">
                         <p class="h1 text-center">{% block head %}{% endblock %}</p>
                     </div>
+
                     <div class="col">
+                        {% if user.is_authenticated %}
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             {% if request.resolver_match.url_name == 'home' %}
                             <a class="btn btn-success" href="{% url 'catalog:add_product' %}">Добавить товар</a>
                             {%endif%}
                         </div>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
 
