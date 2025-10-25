@@ -54,21 +54,20 @@
                         </svg>
                         Пользователь
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
                         {% if user.is_authenticated %}
                         <li class="nav-item">
                             <form method="post" action="{% url 'users:logout'%}" style="display: inline">
                                 {% csrf_token %}
-
-                                <a class="dropdown-item" href="#">Выход</a>
+                                <button type="submit" class="btn btn-danger dropdown-item">Выйти</button>
                             </form>
                         </li>
                         <li><a class="dropdown-item" href="#">Профиль</a></li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'users:login'%}">Войти</a>
+                            <a class="dropdown-item border-outline-success" aria-current="page" href="{% url 'users:login'%}">Войти</a>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page"
+                            <a class="dropdown-item" aria-current="page"
                                href="{% url 'users:register'%}">Регистрация</a>
                             {% endif%}
                     </ul>
