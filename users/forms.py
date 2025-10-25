@@ -1,6 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django_countries.fields import CountryField
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
 from users.models import User
 
 
@@ -60,4 +60,17 @@ class UserRegisterForm(UserCreationForm):
                 field_object.help_text = ''
 
 
+class UserLoginForm(AuthenticationForm):
+
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+        for field, field_object in self.fields.items():
+            field_object.widget.attrs.update({'class': 'form-control'})
+            if field == "username":
+                field_object.label = 'Email'
+                field_object.help_text = ''
+                field_object.widget.attrs.update({'placeholder': 'Введите ваш email для авторизации'})
+            if field == "password":
+                field_object.label = "Пароль"
+                field_object.help_text = ''
 
