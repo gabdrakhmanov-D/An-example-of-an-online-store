@@ -1,34 +1,30 @@
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
+from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
+from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm, UserLoginForm
 
 
 class RegisterView(CreateView):
     template_name = 'users/register.html'
     form_class = UserRegisterForm
-    success_url = reverse_lazy('catalog:home')
 
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        redirect('home')
-        return super().form_valid(form)
+        self.send_welcome_email(user)
+        return redirect('catalog:home')
 
-    # def form_valid(self, form):
-    #     user = form.save()
-    #     self.send_welcome_email(user.email, user.username, user.password)
-    #     return super().form_valid(form)
-    #
-    # def send_welcome_email(self, user_email, login, password):
-    #     subject = 'Добро пожаловать в нашу библиотеку!'
-    #     message = f'Спасибо з а регистраицю! Ваш логин{login},\n Ваш пароль{password}'
-    #     from_email = EMAIL_HOST_USER
-    #     recipient_list = [user_email,]
-    #     send_mail(subject, message, from_email, recipient_list)
+    def send_welcome_email(self, user):
+        subject = 'Благодарим за регистрацию!'
+        message = f'Здравствуйте {user.first_name} {user.last_name}!\nВы зарегистрированы на нашем сайте.'
+        from_email = EMAIL_HOST_USER
+        recipient_list = [user.email,]
+        send_mail(subject, message, from_email, recipient_list)
 
 
 class UserLoginView(LoginView):
