@@ -55,8 +55,22 @@
                         Пользователь
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'users:logout'%}" style="display: inline">
+                                {% csrf_token %}
+
+                                <a class="dropdown-item" href="#">Выход</a>
+                            </form>
+                        </li>
                         <li><a class="dropdown-item" href="#">Профиль</a></li>
-                        <li><a class="dropdown-item" href="#">Выход</a></li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'users:login'%}">Войти</a>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page"
+                               href="{% url 'users:register'%}">Регистрация</a>
+                            {% endif%}
                     </ul>
                 </div>
             </div>
