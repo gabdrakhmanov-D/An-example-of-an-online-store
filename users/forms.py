@@ -1,10 +1,12 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 
 from users.models import User
 
+from utils import UserSettingUpMix
 
-class UserRegisterForm(UserCreationForm):
+
+class UserRegisterForm(UserSettingUpMix, UserCreationForm):
     class Meta:
         model = User
         fields = ("email",
@@ -19,57 +21,33 @@ class UserRegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
-        for field, field_object in self.fields.items():
-            field_object.widget.attrs.update({'class': 'form-control'})
-
-            if field == "username":
-                field_object.label = 'Логин'
-                field_object.help_text = ''
-                field_object.widget.attrs.update({'placeholder': 'Введите ваш логин'})
-
-            if field == "country":
-                field_object.label = "Страна"
-
-            if field == "email":
-                field_object.label = "Электронная почта"
-                field_object.help_text = ''
-                field_object.widget.attrs.update({'placeholder': 'Введите ваш email'})
-
-            if field == "first_name":
-                field_object.label = "Имя"
-                field_object.help_text = ''
-                field_object.widget.attrs.update({'placeholder': 'Введите ваше имя'})
-
-            if field == "last_name":
-                field_object.label = "Фамилия"
-                field_object.help_text = ''
-                field_object.widget.attrs.update({'placeholder': 'Введите вашу фамилию'})
-
-            if field == "phone_number":
-                field_object.label = "Номер телефона"
-                field_object.help_text = ''
-                field_object.widget.attrs.update({'placeholder': 'Введите номер телефона'})
-
-            if field == "password1":
-                field_object.label = "Пароль"
-                field_object.help_text = ''
-                field_object.widget.attrs.update({'placeholder': 'Придумайте пароль'})
-
-            if field == "password2":
-                field_object.label = "Повторите пароль"
-                field_object.help_text = ''
+        self.add_form_control(self.fields)
+        self.settingup_fields(self.fields)
 
 
-class UserLoginForm(AuthenticationForm):
+class UserSettingUpLoginForm(UserSettingUpMix, AuthenticationForm):
     def __init__(self, *args, **kwargs):
-        super(UserLoginForm, self).__init__(*args, **kwargs)
-        for field, field_object in self.fields.items():
-            field_object.widget.attrs.update({'class': 'form-control'})
-            if field == "username":
-                field_object.label = 'Email'
-                field_object.help_text = ''
-                field_object.widget.attrs.update({'placeholder': 'Введите ваш email для авторизации'})
-            if field == "password":
-                field_object.label = "Пароль"
-                field_object.help_text = ''
+        super(UserSettingUpLoginForm, self).__init__(*args, **kwargs)
+        self.add_form_control(self.fields)
+        self.fields['username'].widget.attrs.update({'placeholder': 'Введите ваш email для авторизации'})
+        self.fields['username'].label = 'Email'
+        self.fields['password'].label = 'Пароль'
 
+
+class UserSettingUpProfile(UserSettingUpMix, UserChangeForm):
+    class Meta:
+        model = User
+        fields = ("email",
+                  "username",
+                  "first_name",
+                  "last_name",
+                  "phone_number",
+                  "avatar",
+                  "country",)
+
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
+        self.add_form_control(self.fields)
+        self.settingup_fields(self.fields)
+        self.fields['username'].widget.attrs.update({'readonly': True})
+        self.fields['email'].widget.attrs.update({'readonly': True})
