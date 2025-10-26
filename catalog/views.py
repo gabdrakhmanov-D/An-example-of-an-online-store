@@ -5,7 +5,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import FormView, CreateView, DeleteView
 
 from catalog.forms import ContactForm, ProductForm
-from catalog.models import Product, StoreContact, Category
+from catalog.models import Product, StoreContact
 
 
 class ProductListView(ListView):
@@ -44,6 +44,7 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "catalog/product_confirm_delete.html"
     success_url = reverse_lazy("catalog:home")
 
+
 class ContactFormView(FormView):
     template_name = "catalog/contacts.html"
     form_class = ContactForm
@@ -59,4 +60,3 @@ class ContactFormView(FormView):
               f'Адрес электронной почты: {form.cleaned_data["user_email"]}\n'
               f'Сообщение: {form.cleaned_data["user_text"]}')
         return super().form_valid(form)
-

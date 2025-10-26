@@ -35,10 +35,11 @@ class UserLoginView(LoginView):
     success_url = reverse_lazy('catalog:home')
 
 
-class UserProfileEdit(LoginRequiredMixin,UpdateView):
+class UserProfileEdit(LoginRequiredMixin, UpdateView):
     template_name = 'users/profile.html'
     form_class = UserSettingUpProfile
     model = User
+
     def form_valid(self, form):
         page = self.get_context_data()['object'].pk
         self.success_url = reverse_lazy("users:profile", kwargs={'pk': page})

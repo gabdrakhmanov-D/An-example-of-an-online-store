@@ -6,7 +6,7 @@ from django_countries.fields import CountryField
 class User(AbstractUser):
 
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, verbose_name="Номер телефона", blank=True,null=True)
+    phone_number = models.CharField(max_length=15, verbose_name="Номер телефона", blank=True, null=True)
     avatar = models.ImageField(upload_to="users/avatars/", verbose_name="Аватар", blank=True, null=True)
     country = CountryField(blank_label="(Выберите страну)")
 
@@ -15,6 +15,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"

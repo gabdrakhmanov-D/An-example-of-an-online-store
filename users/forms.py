@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, User
 
 from users.models import User
 
-from utils import UserSettingUpMix
+from users.utils import UserSettingUpMix
 
 
 class UserRegisterForm(UserSettingUpMix, UserCreationForm):
