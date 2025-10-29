@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.list import ListView
@@ -13,6 +15,10 @@ class ProductListView(ListView):
     paginate_by = 3
     template_name = "catalog/home.html"
     context_object_name = 'products'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(is_publish=True)
 
 
 class ProductDetailView(DetailView):
@@ -41,6 +47,19 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
+
+    # def get(self, request, *args, **kwargs):
+    #     product_id = kwargs['pk']
+    #     product = get_object_or_404(Product, id=product_id)
+    #     if not self.request.user.has_perm('product.can_unpublish_product'):
+    #         return HttpResponseForbidden("У вас нет доступа для удаления товара.")
+    #     return redirect("catalog/product_confirm_delete.html")
+    def get_queryset(self, **kwargs):
+        if not self.request.user.has_perm('product.can_unpublish_product'):
+            raise PermissionDenied("У вас нет доступа для удаления товара.")
+
+        return super().get_queryset()
+
     template_name = "catalog/product_confirm_delete.html"
     success_url = reverse_lazy("catalog:home")
 
