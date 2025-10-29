@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.list import ListView
@@ -38,6 +37,14 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "catalog/product_form.html"
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if not self.request.user.has_perm('product.can_unpublish_product'):
+            data['form'].fields['is_publish'].disabled=True
+            return data
+        return data
+
 
     def form_valid(self, form):
         page = self.get_context_data()['object'].pk
