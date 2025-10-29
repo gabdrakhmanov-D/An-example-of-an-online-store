@@ -1,10 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView, CreateView, DeleteView
 
 from catalog.forms import ContactForm, ProductForm
-from catalog.models import Product, StoreContact, Category
+from catalog.models import Product, StoreContact
 
 
 class ProductListView(ListView):
@@ -20,14 +21,14 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "catalog/product_form.html"
     success_url = reverse_lazy("catalog:home")
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "catalog/product_form.html"
@@ -38,10 +39,11 @@ class ProductUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = "catalog/product_confirm_delete.html"
     success_url = reverse_lazy("catalog:home")
+
 
 class ContactFormView(FormView):
     template_name = "catalog/contacts.html"
@@ -58,4 +60,3 @@ class ContactFormView(FormView):
               f'Адрес электронной почты: {form.cleaned_data["user_email"]}\n'
               f'Сообщение: {form.cleaned_data["user_text"]}')
         return super().form_valid(form)
-

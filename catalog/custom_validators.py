@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 
 
 class ForbiddenWordsValidator(RegexValidator):
-    FORBIDDEN_WORDS: list[str] # список запрещенных слов
+    FORBIDDEN_WORDS: list[str]  # список запрещенных слов
 
     FORBIDDEN_WORDS = ['казино',
                        'биржа',

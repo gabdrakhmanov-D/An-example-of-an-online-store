@@ -1,8 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from catalog.custom_validators import Validator
+from catalog.custom_validators import ForbiddenWordsValidator
 from catalog.models import Product
+
 
 class ContactForm(forms.Form):
     user_name = forms.CharField(label="Имя", max_length=100)
@@ -24,7 +25,7 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.validation = Validator()
+        self.validation = ForbiddenWordsValidator()
 
         for field, field_object in self.fields.items():
             field_object.widget.attrs.update({'class': 'form-control'})
@@ -58,7 +59,7 @@ class ProductForm(forms.ModelForm):
 
         if image:
             if image.content_type not in self.ALLOWED_TYPES:
-                raise ValidationError(f'Недопустимый тип файла. Можно загрузить только файлы типов: .jpeg, .png.')
+                raise ValidationError('Недопустимый тип файла. Можно загрузить только файлы типов: .jpeg, .png.')
 
             elif image.size > self.MAX_UPLOAD_SIZE:
                 raise ValidationError('Ваше изображение превышает допустимый лимит 5 МВ.')
