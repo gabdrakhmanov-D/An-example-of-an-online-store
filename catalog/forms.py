@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 
 from catalog.custom_validators import ForbiddenWordsValidator
 from catalog.models import Product
+from users.utils import UserSettingUpMix
 
 
 class ContactForm(forms.Form):
@@ -11,7 +12,7 @@ class ContactForm(forms.Form):
     user_text = forms.CharField(label="Сообщение", widget=forms.Textarea)
 
 
-class ProductForm(forms.ModelForm):
+class ProductForm(UserSettingUpMix,forms.ModelForm):
     MAX_UPLOAD_SIZE = 5 * 1024 ** 2
     ALLOWED_TYPES = ['image/jpeg', 'image/png']
 
@@ -20,6 +21,7 @@ class ProductForm(forms.ModelForm):
         fields = ['name',
                   'description',
                   'category',
+                  'is_publish',
                   'purchase_price',
                   'image']
 
@@ -28,7 +30,6 @@ class ProductForm(forms.ModelForm):
         self.validation = ForbiddenWordsValidator()
 
         for field, field_object in self.fields.items():
-            field_object.widget.attrs.update({'class': 'form-control'})
 
             if field == 'description':
                 field_object.widget.attrs.update({
