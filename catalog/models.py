@@ -30,6 +30,7 @@ class Product(models.Model):
         related_name="products",
     )
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за покупку")
+    is_publish = models.BooleanField(default=False, verbose_name="Статус публикации")
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
@@ -40,6 +41,10 @@ class Product(models.Model):
         verbose_name = "товар"
         verbose_name_plural = "товары"
         ordering = ["purchase_price"]
+        permissions = [
+            ("can_unpublish_product", "Сan unpublish product"),
+
+        ]
 
 
 class StoreContact(models.Model):
