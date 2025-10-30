@@ -55,6 +55,14 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
 
+    # def get(self, request, *args, **kwargs):
+
+    # product_id = kwargs['pk']
+    #     product = get_object_or_404(Product, id=product_id)
+    #     if not self.request.user.has_perm('product.can_unpublish_product'):
+    #         return HttpResponseForbidden("У вас нет доступа для удаления товара.")
+    #     return redirect("catalog/product_confirm_delete.html")
+
     def get_queryset(self, **kwargs):
         if not self.request.user.has_perm('product.delete_product'):
             raise PermissionDenied("У вас нет доступа для удаления товара.")
