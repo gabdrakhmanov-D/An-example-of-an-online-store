@@ -20,15 +20,20 @@
             <h5 class="card-title h1">ЦЕНА: {{ product.purchase_price }} РУБ.</h5>
         </div>
         <div class="card-footer">
-            {% if user.is_authenticated %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-
+                {% if user == product.owner %}
                 <a href="{% url 'catalog:product_edit' object.pk %}"
                    class="btn btn-primary text-light border-dark w-100 mt-4">Изменить</a>
                 <a href="{% url 'catalog:product_delete' object.pk %}"
-                   class="btn btn-danger text-light border-dark w-100 mt-4">Удалить</a></div>
-            {% endif %}
-            <a href="#" class="btn btn-success text-light border-dark w-100 mt-4">Купить</a>
+                   class="btn btn-danger text-light border-dark w-100 mt-4">Удалить</a>
+                {% elif perms.catalog.can_unpublish_product %}
+                <a href="{% url 'catalog:product_delete' object.pk %}"
+                   class="btn btn-danger text-light border-dark w-100 mt-4">Удалить</a>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div><a href="#" class="btn btn-success text-light border-dark w-100 mt-4">Купить</a></div>
+            </div>
         </div>
     </div>
     <div class="col-1"></div>
