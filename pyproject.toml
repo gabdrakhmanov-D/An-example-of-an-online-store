@@ -1,6 +1,6 @@
 [project]
 name = "djangoproject"
-version = "5.0"
+version = "6.0"
 description = ""
 authors = [
     {name = "Your Name",email = "you@example.com"}

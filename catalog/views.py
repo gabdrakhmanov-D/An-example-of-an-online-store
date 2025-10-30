@@ -56,7 +56,6 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
             return data
         return data
 
-
     def form_valid(self, form):
         page = self.get_context_data()['object'].pk
         self.success_url = reverse_lazy("catalog:product_detail", kwargs={'pk': page})
@@ -68,7 +67,7 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
 
     def get(self, *args, **kwargs):
         context = super().get(kwargs, args)
-        if self.request.user != self.object.owner  and not self.request.user.has_perm('product.can_unpublish_product'):
+        if self.request.user != self.object.owner and not self.request.user.has_perm('product.can_unpublish_product'):
             return HttpResponseForbidden("У вас нет доступа для удаления товара.")
         return context
 
