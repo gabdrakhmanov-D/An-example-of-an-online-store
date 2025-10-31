@@ -21,14 +21,12 @@ class UserRegisterForm(UserSettingUpMix, UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
-        self.add_form_control(self.fields)
         self.settingup_fields(self.fields)
 
 
 class UserSettingUpLoginForm(UserSettingUpMix, AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(UserSettingUpLoginForm, self).__init__(*args, **kwargs)
-        self.add_form_control(self.fields)
         self.fields['username'].widget.attrs.update({'placeholder': 'Введите ваш email для авторизации'})
         self.fields['username'].label = 'Email'
         self.fields['password'].label = 'Пароль'
@@ -47,7 +45,6 @@ class UserSettingUpProfile(UserSettingUpMix, UserChangeForm):
 
     def __init__(self, *args, **kwargs):
         super(self.__class__, self).__init__(*args, **kwargs)
-        self.add_form_control(self.fields)
         self.settingup_fields(self.fields)
         self.fields['username'].widget.attrs.update({'readonly': True})
         self.fields['email'].widget.attrs.update({'readonly': True})

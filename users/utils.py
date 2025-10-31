@@ -1,7 +1,15 @@
+from django.forms import BooleanField
+
+
 class UserSettingUpMix:
-    def add_form_control(self, fields):
-        for field, field_object in self.fields.items():
-            field_object.widget.attrs.update({'class': 'form-control'})
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field_object in self.fields.items():
+            if isinstance(field_object, BooleanField):
+                field_object.widget.attrs['class'] = 'form-chek-input'
+            else:
+                field_object.widget.attrs['class'] = 'form-control'
+
 
     def settingup_fields(self, fields):
         for field, field_object in self.fields.items():

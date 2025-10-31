@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
+
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.list import ListView
@@ -14,6 +16,10 @@ class ProductListView(ListView):
     template_name = "catalog/home.html"
     context_object_name = 'products'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(is_publish=True)
+
 
 class ProductDetailView(DetailView):
     model = Product
@@ -27,11 +33,28 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = "catalog/product_form.html"
     success_url = reverse_lazy("catalog:home")
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "catalog/product_form.html"
+
+    def get(self, *args, **kwargs):
+        context = super().get(kwargs, args)
+        if self.request.user != self.object.owner:
+            return HttpResponseForbidden("У вас нет доступа для редактирования товара.")
+        return context
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if not self.request.user.has_perm('product.can_unpublish_product'):
+            data['form'].fields['is_publish'].disabled=True
+            return data
+        return data
 
     def form_valid(self, form):
         page = self.get_context_data()['object'].pk
@@ -41,6 +64,19 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
+
+    def get(self, *args, **kwargs):
+        context = super().get(kwargs, args)
+        if self.request.user != self.object.owner and not self.request.user.has_perm('product.can_unpublish_product'):
+            return HttpResponseForbidden("У вас нет доступа для удаления товара.")
+        return context
+
+    # def get_queryset(self, **kwargs):
+    #     if not self.request.user.has_perm('product.delete_product'):
+    #         raise PermissionDenied("У вас нет доступа для удаления товара.")
+    #
+    #     return super().get_queryset()
+
     template_name = "catalog/product_confirm_delete.html"
     success_url = reverse_lazy("catalog:home")
 
