@@ -1,6 +1,20 @@
+from django.core.cache import cache
+
 from catalog.models import Product
 
 
 def get_products_from_category(category_id):
-    products = Product.objects.filter(category=category_id)
+    products = Product.objects.filter(category=category_id, is_publish=True)
+    return products
+
+
+def get_products_from_cache():
+    key = "products_list"
+    products = cache.get(key)
+
+    if products is not None:
+        return products
+
+    products = Product.objects.all()
+    cache.set(key, products)
     return products
