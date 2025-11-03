@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import FormView, CreateView, DeleteView
 
 from catalog.forms import ContactForm, ProductForm
-from catalog.models import Product, StoreContact
+from catalog.models import Product, StoreContact, Category
 
 
 class ProductListView(ListView):
@@ -19,6 +19,11 @@ class ProductListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(is_publish=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        return context
 
 
 class ProductDetailView(DetailView):
