@@ -4,7 +4,7 @@ from catalog.models import Product
 
 
 def get_products_from_category(category_id):
-    """ Функция для получения списка товаров из заданной категории"""
+    """ Функция для получения списка товаров из заданной категории """
 
     products = Product.objects.filter(category=category_id, is_publish=True)
     return products
