@@ -1,10 +1,24 @@
 {% extends 'catalog/base.html' %}
+{% block title %}
+{% if category %}
+{{ category.name }}
+{% else %}
+Главная
+{% endif %}{% endblock %}
 
-{% block title %}Главная{% endblock %}
+{% block head%}{% if category %}
+{{ category.name }}
+{% else %}
+Главная
+{% endif %}{% endblock %}
 
-{% block head%}Главная{% endblock %}
-
-{% block head_description %}Вы находитесь на сайте, предназначенном для продажи{% endblock %}
+{% block head_description %}
+{% if category %}
+{{ category.description }}
+{% else %}
+Вы находитесь на сайте, предназначенном для продажи
+{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="row mt-2 justify-content-center">
