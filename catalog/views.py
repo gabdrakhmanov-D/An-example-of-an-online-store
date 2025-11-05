@@ -2,12 +2,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, UpdateView
-from django.views.generic.list import ListView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import ListView, MultipleObjectMixin
 from django.views.generic.edit import FormView, CreateView, DeleteView
 
 from catalog.forms import ContactForm, ProductForm
-from catalog.models import Product, StoreContact
+from catalog.models import Product, StoreContact, Category
+from catalog.services import get_products_from_category, get_products_from_cache
 
 
 class ProductListView(ListView):
@@ -17,10 +21,16 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(is_publish=True)
+        queryset = get_products_from_cache()
+        # return queryset.filter(is_publish=True)
+        return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        return context
 
+@method_decorator(cache_page(60), name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = "catalog/product_detail.html"
@@ -96,3 +106,21 @@ class ContactFormView(FormView):
               f'Адрес электронной почты: {form.cleaned_data["user_email"]}\n'
               f'Сообщение: {form.cleaned_data["user_text"]}')
         return super().form_valid(form)
+
+
+class ProductsCategoryListView(ListView):
+    model = Product
+    paginate_by = 3
+    template_name = "catalog/home.html"
+    context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        context["category"] = Category.objects.filter(pk=self.kwargs['pk'])[0]
+
+        return context
+
+    def get_queryset(self):
+        return get_products_from_category(self.kwargs['pk'])

@@ -20,7 +20,6 @@
                     <div class="col">
                         <p class="h1 text-center">{% block head %}{% endblock %}</p>
                     </div>
-
                     <div class="col">
                         {% if user.is_authenticated %}
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -30,12 +29,22 @@
                         </div>
                         {% endif %}
                     </div>
-
                 </div>
             </div>
 
             <div class="row">
                 <p class="h5 text-center text-secondary">{% block head_description %}{% endblock %}</p>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton5"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Выбрать категорию
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
+                    {% for category in categories %}
+                    <li><a class="dropdown-item" href="{% url 'catalog:category' category.pk %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
             </div>
         </header>
         <div class="row mt-2">
