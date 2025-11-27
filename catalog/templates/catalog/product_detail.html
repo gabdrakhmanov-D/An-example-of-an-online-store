@@ -1,0 +1,55 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block head%}{{ product.name }}{% endblock %}
+
+
+{% block content %}
+<header>
+    <h1 class="text-center">Подробная информация о товаре:</h1>
+</header>
+{% if product %}
+<div class="d-flex justify-content-center mt-5">
+    <div class="card text-center align-middle" style="max-width: 1050px">
+        <div class="card-header h5">
+            <strong>{{ product.name }}</strong>
+        </div>
+        <div class="card-body">
+            <p class="card-text  py-2"><strong>{{product.description }} </strong></p>
+            <h5 class="card-title h1">ЦЕНА: {{ product.purchase_price }} РУБ.</h5>
+        </div>
+        <div class="card-footer">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                {% if user == product.owner %}
+                <a href="{% url 'catalog:product_edit' object.pk %}"
+                   class="btn btn-primary text-light border-dark w-100 mt-4">Изменить</a>
+                <a href="{% url 'catalog:product_delete' object.pk %}"
+                   class="btn btn-danger text-light border-dark w-100 mt-4">Удалить</a>
+                {% elif perms.catalog.can_unpublish_product %}
+                <a href="{% url 'catalog:product_delete' object.pk %}"
+                   class="btn btn-danger text-light border-dark w-100 mt-4">Удалить</a>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div><a href="#" class="btn btn-success text-light border-dark w-100 mt-4">Купить</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-6">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" class="card-img-top" alt="{{product.name}}">
+        {% else %}
+        {% load static %}
+        <img src="{% static 'default_img/product.webp' %}" class="object-fit-sm-contain border rounded"
+             alt="{{product.name}}">
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="container text-center">
+        <h2>Товар не найден</h2>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

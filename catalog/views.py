@@ -1,0 +1,126 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
+
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.generic import DetailView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import ListView, MultipleObjectMixin
+from django.views.generic.edit import FormView, CreateView, DeleteView
+
+from catalog.forms import ContactForm, ProductForm
+from catalog.models import Product, StoreContact, Category
+from catalog.services import get_products_from_category, get_products_from_cache
+
+
+class ProductListView(ListView):
+    model = Product
+    paginate_by = 3
+    template_name = "catalog/home.html"
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        queryset = get_products_from_cache()
+        # return queryset.filter(is_publish=True)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        return context
+
+@method_decorator(cache_page(60), name='dispatch')
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "catalog/product_detail.html"
+    context_object_name = 'product'
+
+
+class ProductCreateView(LoginRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:home")
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+
+    def get(self, *args, **kwargs):
+        context = super().get(kwargs, args)
+        if self.request.user != self.object.owner:
+            return HttpResponseForbidden("У вас нет доступа для редактирования товара.")
+        return context
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if not self.request.user.has_perm('product.can_unpublish_product'):
+            data['form'].fields['is_publish'].disabled=True
+            return data
+        return data
+
+    def form_valid(self, form):
+        page = self.get_context_data()['object'].pk
+        self.success_url = reverse_lazy("catalog:product_detail", kwargs={'pk': page})
+        return super().form_valid(form)
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+
+    def get(self, *args, **kwargs):
+        context = super().get(kwargs, args)
+        if self.request.user != self.object.owner and not self.request.user.has_perm('product.can_unpublish_product'):
+            return HttpResponseForbidden("У вас нет доступа для удаления товара.")
+        return context
+
+    # def get_queryset(self, **kwargs):
+    #     if not self.request.user.has_perm('product.delete_product'):
+    #         raise PermissionDenied("У вас нет доступа для удаления товара.")
+    #
+    #     return super().get_queryset()
+
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:home")
+
+
+class ContactFormView(FormView):
+    template_name = "catalog/contacts.html"
+    form_class = ContactForm
+    success_url = reverse_lazy("catalog:home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["store_contact"] = StoreContact.objects.all()[0]
+        return context
+
+    def form_valid(self, form):
+        print(f'Имя пользователя: {form.cleaned_data["user_name"]}\n'
+              f'Адрес электронной почты: {form.cleaned_data["user_email"]}\n'
+              f'Сообщение: {form.cleaned_data["user_text"]}')
+        return super().form_valid(form)
+
+
+class ProductsCategoryListView(ListView):
+    model = Product
+    paginate_by = 3
+    template_name = "catalog/home.html"
+    context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        context["category"] = Category.objects.filter(pk=self.kwargs['pk'])[0]
+
+        return context
+
+    def get_queryset(self):
+        return get_products_from_category(self.kwargs['pk'])

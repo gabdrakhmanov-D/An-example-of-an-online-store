@@ -1,0 +1,78 @@
+{% extends 'catalog/base.html' %}
+{% block title %}
+{% if category %}
+{{ category.name }}
+{% else %}
+Главная
+{% endif %}{% endblock %}
+
+{% block head%}{% if category %}
+{{ category.name }}
+{% else %}
+Главная
+{% endif %}{% endblock %}
+
+{% block head_description %}
+{% if category %}
+{{ category.description }}
+{% else %}
+Вы находитесь на сайте, предназначенном для продажи
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row mt-2 justify-content-center">
+    {% for product_page in products %}
+    <div class="col-3 my-5">
+        <a class="link-dark link-offset-2 link-underline link-underline-opacity-0"
+           href="{% url 'catalog:product_detail' product_page.pk %}">
+            <div class="card text-center bg-info-subtle" style="height: 600px">
+                <div class="card-header h5" style="height: 80px">
+                    <strong>{{ product_page.name }}</strong>
+                </div>
+                <div class="container text-center bg-info-subtle" style="height: 400px">
+                    {% if product_page.image %}
+                    <img src="{{ product_page.image.url }}"
+                         class="card-img-top img-fluid position-relative top-50 start-50 translate-middle"
+                         alt="{{product_page.name}}">
+                    {% else %}
+                    {% load static %}
+                    <img src="{% static 'default_img/product.webp' %}"
+                         class="object-fit-sm-contain border rounded img-fluid position-relative top-50 start-50 translate-middle"
+                         alt="{{product_page.name}}" height="335">
+                    {% endif %}
+                </div>
+                <div class="card-body" style="height: 250px">
+                    <p class="card-text  py-2"><strong>{{ product_page.description|truncatechars:100 }} </strong></p>
+                </div>
+
+            </div>
+        </a></div>
+    {% endfor %}
+    <nav aria-label="Навигация по страницам">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">Предыдущая</a>
+            </li>
+            {% endif %}
+            {% for page_product in page_obj.paginator.page_range %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_product }}">{{ page_product }}</a></li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Следующая</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link">Следующая</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+</div>
+{% endblock %}
